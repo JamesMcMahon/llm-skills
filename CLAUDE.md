@@ -19,9 +19,9 @@ push`) — the user pushes, always, in any repo.
 <body only if there's a real "why" worth a sentence>
 ```
 
-Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Keep the header to one
-line, one commit = one clear thing. Skip the body by default; past
-commits here were too verbose.
+Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Header is one line,
+**50 characters or under**, one commit = one clear thing. Skip the body
+by default; past commits here were too verbose.
 
 ## Authoring/editing skills here
 
