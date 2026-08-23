@@ -35,9 +35,10 @@ commit`.
 | `jj describe -m "msg"` | Label `@` without moving to a new change |
 | `jj commit -m "msg"` | Label `@`, then start a fresh empty change on top |
 | `jj new [-r <rev>]` | Start a new empty change (on `@`, or on `<rev>`) |
-| `jj bookmark set <name> -r @` | Point bookmark `<name>` at `@` |
+| `jj bookmark set <name> -r @` | Point bookmark `<name>` at `@` (creates it if it doesn't exist yet) |
 | `jj bookmark advance` | Move the closest bookmark behind `@` (e.g. `main`) forward to `@` — no name needed |
-| `jj bookmark track <name>@<remote>` | Link a local bookmark to an existing remote one so push/fetch will manage it |
+| `jj bookmark track <name>@<remote>` | Link a local bookmark to a remote one so push/fetch will manage it |
+| `jj git remote add <name> <url>` | Register a remote (`jj git remote list` / `set-url` to inspect / fix it) |
 | `jj git push` / `jj git fetch` | Push tracked bookmarks / fetch from remote |
 | `jj edit <rev>` | Move `@` onto an existing commit to edit it in place |
 | `jj squash --into <rev>` | Fold the current change's contents into `<rev>` |
@@ -68,6 +69,23 @@ rather than batching a whole task into one change. This applies doubly
 to agents: `jj describe` + `jj new` as you finish each step gives the
 user a real, reviewable record of what happened and when, and gives you
 an undo point if a later step goes wrong.
+
+## Connecting a Fresh Repo to a Remote
+
+`jj git init` (with no clone) creates neither a remote nor a bookmark, so
+the workflow above doesn't apply until both exist:
+
+1. `jj git remote add origin <url>` — register the remote.
+2. `jj bookmark set main -r @` — no bookmark exists yet, so `jj bookmark
+   advance` has nothing to move.
+3. `jj git push` will refuse: *"Refusing to create new remote bookmark
+   main@origin"*. This isn't an error — run `jj bookmark track
+   main@origin`, then push again. Same fix as the "non-tracking remote
+   bookmark" warning in the normal workflow, just hit on the first push
+   instead of after a fetch.
+
+From here the normal `jj bookmark advance` + `jj git push` workflow
+applies.
 
 ## Editing a Prior Commit
 
