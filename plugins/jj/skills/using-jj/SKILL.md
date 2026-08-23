@@ -52,9 +52,22 @@ commit`.
 2. `jj describe -m "message"` to label the current change (or `jj commit -m "message"` to label it and open a new empty change on top in one step).
 3. `jj bookmark advance` to move the closest bookmark (e.g. `main`) forward to the change you just finished — finds it automatically, no need to name it (equivalent to `jj bookmark set main -r @`, but works generically).
 4. `jj git push`. If it warns about a "non-tracking remote bookmark," that bookmark exists on the remote but isn't linked yet — run `jj bookmark track <name>@<remote>` (e.g. `jj bookmark track main@origin`) once, then push again.
+5. `jj new` to start the next unit of work. Don't skip this — see below.
 
-To keep working on top without committing yet, just keep editing — there's
-no need to run `jj new` first; you're always editing `@`.
+There's no staging area, so edit freely before you're "done" — you're
+always on `@`. The flip side: nothing stops edits from landing *after*
+you're done, either. Once a change is described (or pushed), further
+edits silently join that same change until you `jj new` — bookmarks
+auto-follow in-place edits, so this won't even show up as a conflict,
+just a "done" commit that quietly keeps growing (made exactly this
+mistake mid-session). Since there's no manual staging step either way,
+the real discipline in jj is temporal, not mechanical: `jj new` between
+logical units of work is what gives you a clean `jj log`/`jj op log` —
+it costs nothing, so checkpoint after each logically-complete step
+rather than batching a whole task into one change. This applies doubly
+to agents: `jj describe` + `jj new` as you finish each step gives the
+user a real, reviewable record of what happened and when, and gives you
+an undo point if a later step goes wrong.
 
 ## Editing a Prior Commit
 
