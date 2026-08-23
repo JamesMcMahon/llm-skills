@@ -16,6 +16,12 @@
       "source": "./plugins/jj",
       "description": "Reference for using jj (Jujutsu) as the VCS for this repo instead of git.",
       "version": "0.1.0"
+    },
+    {
+      "name": "communication-style",
+      "source": "./plugins/communication-style",
+      "description": "Terse, code-first, non-directive communication style for this user.",
+      "version": "0.1.0"
     }
   ]
 }

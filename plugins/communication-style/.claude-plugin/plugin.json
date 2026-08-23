@@ -1,0 +1,8 @@
+{
+  "name": "communication-style",
+  "description": "Terse, code-first, non-directive communication style for this user.",
+  "version": "0.1.0",
+  "author": {
+    "name": "James McMahon"
+  }
+}
