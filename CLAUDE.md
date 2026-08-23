@@ -10,6 +10,19 @@ This repo uses jj (colocated with git) — see
 describe changes locally as normal; **never run the push step** (`jj git
 push`) — the user pushes, always, in any repo.
 
+**Commit messages: Conventional Commits, terse (experiment, forward-only
+— no rewriting past history).**
+
+```
+<type>(<scope>): <short summary>
+
+<body only if there's a real "why" worth a sentence>
+```
+
+Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Keep the header to one
+line, one commit = one clear thing. Skip the body by default; past
+commits here were too verbose.
+
 ## Authoring/editing skills here
 
 Governed by `superpowers:writing-skills`. On top of that, this repo's
