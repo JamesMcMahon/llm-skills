@@ -35,18 +35,43 @@ A plugin can bundle multiple skills under its `skills/` folder if they're
 tightly related, but the default here is one skill per plugin, since the
 goal is to eventually publish some of these individually.
 
-## Installing skills (new machine)
+## Local development (editing skills)
+
+`claude plugin marketplace add` + `install` **copies** plugin files into
+`~/.claude/plugins/cache/` — editing the repo afterward doesn't update
+what's loaded until you `marketplace update` + reinstall. For a repo
+you're actively iterating on, symlink into `~/.claude/skills/` instead —
+Claude Code loads straight through the symlink, so edits here are the
+live source, no resync step, ever:
 
 ```bash
 git clone git@github.com:JamesMcMahon/llm-skills.git
 cd llm-skills
+./scripts/link-skills.sh
+```
+
+Re-run it after adding a new plugin. Restart Claude Code (or start a new
+session) for anything new/changed to take effect either way — plugin
+state is a session-start snapshot, not live-reloaded.
+
+To test a plugin without linking it permanently:
+
+```bash
+claude --plugin-dir ./plugins/my-new-skill
+```
+
+## Installing skills (as a consumer, not editing)
+
+Use this on a machine where you just want the skills, not to edit them
+— or to sanity-check the real install/publish flow before releasing a
+plugin. This is the copy-based path described above, so don't mix it
+with symlinking the same plugin name (whichever was set up last wins).
+
+```bash
 claude plugin marketplace add .
 claude plugin install jj@llm-skills
 claude plugin install communication-style@llm-skills
 ```
-
-Restart Claude Code (or start a new session) for newly installed skills
-to take effect — they don't apply mid-session.
 
 New skill added to an already-added marketplace:
 
@@ -57,14 +82,6 @@ claude plugin install <name>@llm-skills
 
 `claude plugin validate <path>` checks a plugin or marketplace manifest
 before installing — run it after editing `plugin.json`/`marketplace.json`.
-
-## Local development
-
-Test a plugin without installing it:
-
-```bash
-claude --plugin-dir ./plugins/my-new-skill
-```
 
 ## Publishing a skill individually
 

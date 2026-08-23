@@ -1,0 +1,8 @@
+{
+  "name": "skill-maintenance",
+  "description": "Fix locally-installed skills in place from any project, without breaking flow.",
+  "version": "0.1.0",
+  "author": {
+    "name": "James McMahon"
+  }
+}

@@ -22,6 +22,12 @@
       "source": "./plugins/communication-style",
       "description": "Terse, code-first, non-directive communication style for this user.",
       "version": "0.1.0"
+    },
+    {
+      "name": "skill-maintenance",
+      "source": "./plugins/skill-maintenance",
+      "description": "Fix locally-installed skills in place from any project, without breaking flow.",
+      "version": "0.1.0"
     }
   ]
 }
