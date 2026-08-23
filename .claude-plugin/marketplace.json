@@ -9,6 +9,12 @@
       "source": "./plugins/example-skill",
       "description": "Template plugin — copy this folder to start a new skill.",
       "version": "0.1.0"
+    },
+    {
+      "name": "jj",
+      "source": "./plugins/jj",
+      "description": "Reference for using jj (Jujutsu) as the VCS for this repo instead of git.",
+      "version": "0.1.0"
     }
   ]
 }

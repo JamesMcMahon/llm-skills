@@ -1,0 +1,8 @@
+{
+  "name": "jj",
+  "description": "Reference for using jj (Jujutsu) as the VCS for this repo instead of git.",
+  "version": "0.1.0",
+  "author": {
+    "name": "James McMahon"
+  }
+}
