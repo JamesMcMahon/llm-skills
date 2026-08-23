@@ -35,6 +35,29 @@ A plugin can bundle multiple skills under its `skills/` folder if they're
 tightly related, but the default here is one skill per plugin, since the
 goal is to eventually publish some of these individually.
 
+## Installing skills (new machine)
+
+```bash
+git clone git@github.com:JamesMcMahon/llm-skills.git
+cd llm-skills
+claude plugin marketplace add .
+claude plugin install jj@llm-skills
+claude plugin install communication-style@llm-skills
+```
+
+Restart Claude Code (or start a new session) for newly installed skills
+to take effect — they don't apply mid-session.
+
+New skill added to an already-added marketplace:
+
+```bash
+claude plugin marketplace update llm-skills
+claude plugin install <name>@llm-skills
+```
+
+`claude plugin validate <path>` checks a plugin or marketplace manifest
+before installing — run it after editing `plugin.json`/`marketplace.json`.
+
 ## Local development
 
 Test a plugin without installing it:
@@ -42,15 +65,6 @@ Test a plugin without installing it:
 ```bash
 claude --plugin-dir ./plugins/my-new-skill
 ```
-
-Test the whole marketplace as a user would install it:
-
-```
-/plugin marketplace add /Users/jamie/workspace/llm-skills
-/plugin install my-new-skill@llm-skills
-```
-
-After editing, reload with `/reload-plugins` (no restart needed).
 
 ## Publishing a skill individually
 
