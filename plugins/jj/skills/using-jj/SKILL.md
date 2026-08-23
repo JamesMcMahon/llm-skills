@@ -44,7 +44,7 @@ commit`.
 | `jj absorb` | Auto-distribute uncommitted `@` changes into ancestors |
 | `jj next` / `jj prev` | Move `@` to the child / parent revision |
 | `jj undo` / `jj op log` | Undo the last operation / view operation history |
-| `jj abandon` | Discard a change, rebasing descendants onto its parent |
+| `jj abandon [--retain-bookmarks]` | Discard a change, rebasing descendants onto its parent — **deletes** any bookmark pointing at it unless `--retain-bookmarks` is given |
 
 ## Typical Solo Workflow
 
@@ -103,6 +103,10 @@ jump to any earlier state. This covers accidental `abandon`, bad
   and its bookmark ends up conflicted, e.g. `main??`, blocking push).
   Fix: `jj bookmark set <name> -r <the-revision-you-actually-want>` to
   resolve the bookmark, then `jj abandon` the stale duplicate revision.
+- **Assuming `jj abandon` moves a bookmark to the parent.** It doesn't —
+  by default it *deletes* any bookmark pointing at the abandoned commit
+  entirely. If you want it preserved (moved to the parent instead), pass
+  `--retain-bookmarks`.
 - **Trusting `git status`/`git log` for truth here.** Git's HEAD stays
   detached and its index goes stale — it can show "changes not staged"
   right after a clean `jj describe`. Refs like `refs/heads/main` are

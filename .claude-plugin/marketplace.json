@@ -1,5 +1,6 @@
 {
   "name": "llm-skills",
+  "description": "Personal marketplace of local-workflow skills, one plugin per skill.",
   "owner": {
     "name": "James McMahon"
   },
