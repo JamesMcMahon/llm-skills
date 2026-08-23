@@ -1,0 +1,8 @@
+{
+  "name": "example-skill",
+  "description": "Template plugin — copy and rename this folder to scaffold a new skill.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Jamie"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "llm-skills",
+  "owner": {
+    "name": "James McMahon"
+  },
+  "plugins": [
+    {
+      "name": "example-skill",
+      "source": "./plugins/example-skill",
+      "description": "Template plugin — copy this folder to start a new skill.",
+      "version": "0.1.0"
+    }
+  ]
+}
