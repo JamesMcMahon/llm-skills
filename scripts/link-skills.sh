@@ -11,7 +11,6 @@ mkdir -p "$skills_dir"
 for plugin_dir in "$repo_root"/plugins/*/; do
   plugin_json="${plugin_dir}.claude-plugin/plugin.json"
   [ -f "$plugin_json" ] || continue
-  [ "$(basename "$plugin_dir")" = "example-skill" ] && continue  # template, not a real skill
 
   name="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['name'])" "$plugin_json")"
   source="${plugin_dir%/}"

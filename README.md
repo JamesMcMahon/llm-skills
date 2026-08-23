@@ -20,12 +20,11 @@ llm-skills/
 │               └── SKILL.md    # the skill itself
 ```
 
-`plugins/example-skill/` is a template — copy it to start a new skill.
-
 ## Adding a new skill
 
-1. Copy the template: `cp -R plugins/example-skill plugins/my-new-skill`
-2. Rename the inner `skills/example-skill` folder to match, and rewrite
+1. Copy an existing plugin as a starting point, e.g.
+   `cp -R plugins/jj plugins/my-new-skill`.
+2. Rename the inner `skills/<old-name>` folder to match, and rewrite
    `SKILL.md` (frontmatter `name` + `description`, then the instructions).
 3. Update `plugins/my-new-skill/.claude-plugin/plugin.json` (`name`,
    `description`).
