@@ -22,6 +22,12 @@
       "source": "./plugins/skill-maintenance",
       "description": "Fix locally-installed skills in place from any project, without breaking flow.",
       "version": "0.1.0"
+    },
+    {
+      "name": "commit-messages",
+      "source": "./plugins/commit-messages",
+      "description": "VCS-agnostic guidance for writing good commit/change messages.",
+      "version": "0.1.0"
     }
   ]
 }
