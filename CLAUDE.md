@@ -10,8 +10,7 @@ This repo uses jj (colocated with git) — see
 describe changes locally as normal; **never run the push step** (`jj git
 push`) — the user pushes, always, in any repo.
 
-**Commit messages: Conventional Commits, terse (experiment, forward-only
-— no rewriting past history).**
+**Commit messages: Conventional Commits**
 
 ```
 <type>(<scope>): <short summary>
@@ -19,8 +18,7 @@ push`) — the user pushes, always, in any repo.
 <body only if there's a real "why" worth a sentence>
 ```
 
-Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Header is one line,
-**50 characters or under**, one commit = one clear thing.
+Types: `feat`, `fix`, `docs`, `chore`, `refactor`.
 
 ## Authoring/editing skills here
 
