@@ -2,7 +2,6 @@
 
 ## Skill revisions
 
-- Improving Skills should not borrow or leak details of repo it is being refined from, information could be private or propritary
 - JJ skill - "branching" is differnt, so finishing up a branch advice applies to moving the main bookmark to the top of the work in progress 
 
 ## Skills

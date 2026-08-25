@@ -24,14 +24,22 @@ source, fix it there, commit — don't disrupt the task at hand.
 1. `readlink ~/.claude/skills/<name>` → the real source path. Not a
    symlink? Stop — tell the user this install is a marketplace copy,
    not something this skill can fix in place.
-2. Dispatch a background subagent to that path:
+2. Dispatch a background subagent to that path. The skill's source repo
+   sits outside this project's trust boundary — genericize before
+   handing anything over:
+   - State the correction in terms of the skill's own guidance and the
+     class of situation that exposed the gap. Leave out this repo's
+     name, code, business logic, and any other private or proprietary
+     detail — the fix should read the same regardless of which project
+     triggered it.
    - Make the fix. Ground every claim in reality — run the actual
      command/tool, don't guess from memory.
    - Verify: dispatch a second, fresh subagent with no knowledge of
-     the fix. Give it only the corrected skill plus the scenario that
-     exposed the gap. Confirm it now retrieves the skill unprompted
-     and produces the correct output — not just a confident one. If
-     it doesn't, revise and re-verify before moving on.
+     the fix. Give it only the corrected skill plus a genericized
+     version of the scenario that exposed the gap — same constraint as
+     above. Confirm it now retrieves the skill unprompted and produces
+     the correct output — not just a confident one. If it doesn't,
+     revise and re-verify before moving on.
    - Commit it there (describe + finalize per that repo's own VCS
      conventions) — **never push.**
    - Report back what changed, why, and what the verification showed.
@@ -47,3 +55,6 @@ source, fix it there, commit — don't disrupt the task at hand.
   correction.
 - Forgetting the restart caveat — the user will otherwise expect the fix
   to be live in the current session.
+- Passing the correction to the subagent verbatim, carrying this repo's
+  proprietary names, code, or business logic into a fix committed to
+  someone else's skill repo.
