@@ -27,9 +27,14 @@ source, fix it there, commit — don't disrupt the task at hand.
 2. Dispatch a background subagent to that path:
    - Make the fix. Ground every claim in reality — run the actual
      command/tool, don't guess from memory.
+   - Verify: dispatch a second, fresh subagent with no knowledge of
+     the fix. Give it only the corrected skill plus the scenario that
+     exposed the gap. Confirm it now retrieves the skill unprompted
+     and produces the correct output — not just a confident one. If
+     it doesn't, revise and re-verify before moving on.
    - Commit it there (describe + finalize per that repo's own VCS
      conventions) — **never push.**
-   - Report back what changed and why.
+   - Report back what changed, why, and what the verification showed.
 3. Keep working on the original task while it runs — don't block on it.
 4. When it reports back: tell the user the fix is committed, not live —
    it needs a Claude Code restart to take effect.
