@@ -20,8 +20,7 @@ push`) — the user pushes, always, in any repo.
 ```
 
 Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Header is one line,
-**50 characters or under**, one commit = one clear thing. Skip the body
-by default; past commits here were too verbose.
+**50 characters or under**, one commit = one clear thing.
 
 ## Authoring/editing skills here
 
