@@ -47,7 +47,7 @@ commit`.
 | `jj undo` / `jj op log` | Undo the last operation / view operation history |
 | `jj abandon [--retain-bookmarks]` | Discard a change, rebasing descendants onto its parent — **deletes** any bookmark pointing at it unless `--retain-bookmarks` is given |
 | `jj new -B <rev>` | Insert a new empty change immediately *before* `<rev>`, auto-rebasing it and its descendants forward |
-| `jj resolve` | Launch a merge tool on the conflicted paths of `@` — see Resolving Conflicts below |
+| `jj resolve [-r <rev>]` | Launch a merge tool on conflicted paths (defaults to `@`) — see Resolving Conflicts below |
 | `jj bookmark set <name> -r <rev> --allow-backwards` | Move a bookmark to an earlier revision (refused without the flag) |
 | `jj new <rev1> <rev2> ...` | Create a merge commit with multiple parents (`jj merge` is deprecated) |
 
@@ -149,16 +149,24 @@ checks automatically and asks for `jj git fetch` if the remote moved.
 
 Rebase, squash, and `jj new -B` never stop for a conflict — they record
 it on the affected commit and keep going. `jj log`/`jj st` marks it
-`conflict`, and the conflict propagates to descendants until fixed.
+`conflict`, and it propagates to descendants until fixed. **`jj git
+push` refuses to push any bookmark whose history includes a conflicted
+commit** — that's a hard stop, not just the `jj log` marker.
 
-1. Move `@` onto the conflicted commit: `jj new <rev>` (scratch change,
-   `jj squash --into <rev>` when done) or `jj edit <rev>` (in place —
-   same tradeoff as above).
-2. Run `jj resolve` (merge tool) or edit the conflicted file directly.
-3. **jj's conflict markers are not git's:** `<<<<<<<`/`>>>>>>>` bound the
-   conflict, `+++++++` marks a side's snapshot, `%%%%%%%` marks a diff
-   against it. Expecting git's `<<<<`/`====`/`>>>>` format will misread
-   the file.
+1. Resolve without moving `@`: `jj resolve -r <rev>`. Or move onto it
+   first — `jj new -r <rev>` (scratch change, `jj squash --into <rev>`
+   when done) or `jj edit <rev>` (in place) — same tradeoff as above.
+2. `jj resolve [-r <rev>]` launches your configured merge tool
+   (`ui.merge-tool`) per conflicted file. No tool configured? Edit the
+   file by hand — no `git add`-equivalent step, jj reparses the file
+   and clears the conflict once no markers remain.
+3. **jj's default conflict markers aren't git's `<<<<`/`====`/`>>>>`.**
+   Each hunk is bounded by `<<<<<<< conflict N of M` / `>>>>>>> conflict
+   N of M ends`; inside, `%%%%%%% diff from: <base> to: <side>` is a
+   unified diff against one side, `+++++++ <rev> "desc"` is a full
+   verbatim snapshot of the *other* side — there is no bare `=======`
+   divider. (Marker style is configurable via `ui.conflict-marker-style`;
+   `diff`, described here, is the default.)
 
 ## Undo / Recovery
 
