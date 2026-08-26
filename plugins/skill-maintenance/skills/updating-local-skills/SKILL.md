@@ -68,47 +68,41 @@ and the fix feels obviously right.
 
 ## Fix Discipline (both paths)
 
-- Classify the gap: **retrieval** (the skill never got invoked for this
-  situation — fix belongs in the frontmatter `description`) or
-  **application** (the skill was read but produced the wrong guidance —
-  fix belongs in the body). Fixing the wrong half leaves the real gap
-  open.
+**REQUIRED BACKGROUND:** superpowers:writing-skills — its RED-GREEN-
+REFACTOR cycle, "Match the Form to the Failure," and token-efficiency
+targets all apply directly to a fix, not just to authoring a new skill.
+This section covers only what differs when the "test" is one gap in an
+already-deployed skill rather than a skill written from scratch.
+
+- Classify the gap: **retrieval** (fix → frontmatter `description`) or
+  **application** (fix → body). Fixing the wrong half leaves the real
+  gap open.
 - Check the target repo's working copy is clean before touching
   anything (`git status`, or the jj equivalent — check for a `.jj`
   directory rather than assuming git) — stash/back up or stop and ask
   if it's dirty; it may hold the owner's in-progress work.
-- Confirm the gap is real: run the scenario that exposed it — genericized
-  if dispatching (2a) — against the *current, unfixed* skill with a
-  fresh subagent first. If it doesn't reproduce the failure, the
-  scenario (or its genericization) lost the trigger — fix that before
-  touching the skill, not after.
-- Make the fix. Ground every claim in reality — run the actual
+- **RED:** confirm the gap is real — run the scenario that exposed it
+  (genericized if dispatching, 2a) against the *current, unfixed* skill
+  with a fresh subagent. No repro means the scenario lost the trigger —
+  fix that before touching the skill.
+- **Make the fix.** Ground every claim in reality — run the actual
   command/tool or check the actual upstream source, don't guess from
-  memory. Match the fix's form to the failure (prohibition for a rule
-  skipped under pressure, recipe for wrong-shaped output, structural
-  field for an omitted element, conditional for context-dependent
-  behavior — see superpowers:writing-skills' "Match the Form to the
-  Failure"). Reread the whole file and trim/de-dupe before calling it
-  done — a one-off fix is exactly how skills accrete duplication. Hold
-  it to a token-efficiency budget too (frequently-loaded skills <200
-  words, others <500): tighten existing wording rather than piling on,
-  and cut something else if the fix pushes the file over.
-- **Verify: dispatch a second, fresh, context-free subagent** with no
-  knowledge of the fix. Give it the same realistic scenario from the
-  baseline check — not the fact that a fix was made. Confirm it now
+  memory.
+- **GREEN, then verify:** dispatch a second, fresh, context-free
+  subagent — same scenario, no knowledge a fix was made. Confirm it now
   retrieves the skill unprompted (retrieval gaps) or produces the
-  correct output (application gaps) — not just a confident one.
+  correct output (application gaps), not just a confident one.
   Cross-check anything it cites against a primary source yourself;
-  agents can cite the wrong thing with equal confidence. If it doesn't
-  pass, revise and re-verify. **Exception — retrieval/description
-  fixes:** unverifiable this way. The discovery listing is a
-  process-wide cache, not read live from disk — a subagent dispatched
-  right after the fix still sees the old description and reproduces the
-  baseline failure regardless of whether the fix is correct. Verify
-  these by inspection instead: confirm the new wording covers the
-  scenario, tell the user a restart is needed before it's behaviorally
-  checkable, and re-run the baseline scenario after they restart as the
-  real verify pass.
+  agents can cite the wrong thing with equal confidence. Doesn't pass →
+  **REFACTOR**: revise and re-verify.
+  **Exception — retrieval/description fixes:** unverifiable this way.
+  The discovery listing is a process-wide cache, not read live from
+  disk — a subagent dispatched right after the fix still sees the old
+  description and reproduces the baseline failure regardless of whether
+  the fix is correct. Verify these by inspection instead: confirm the
+  new wording covers the scenario, tell the user a restart is needed
+  before it's behaviorally checkable, and re-run the baseline scenario
+  after they restart as the real verify pass.
 
 ## Common Mistakes
 
@@ -123,9 +117,6 @@ and the fix feels obviously right.
 - Passing the correction to a dispatched subagent verbatim, carrying
   this repo's proprietary names, code, or business logic into a fix
   committed to someone else's skill repo.
-- Skipping the baseline run and treating "the fix passed" as proof — if
-  the unfixed skill was never shown to fail on that scenario, a pass
-  afterward proves nothing.
 - Fixing the wrong half: adding body content for a retrieval gap, or
   rewording the description for an application gap.
 - Landing a fix by addition alone — growing the file past its
