@@ -151,7 +151,9 @@ Rebase, squash, and `jj new -B` never stop for a conflict — they record
 it on the affected commit and keep going. `jj log`/`jj st` marks it
 `conflict`, and it propagates to descendants until fixed. **`jj git
 push` refuses to push any bookmark whose history includes a conflicted
-commit** — that's a hard stop, not just the `jj log` marker.
+commit** — that's a hard stop, not just the `jj log` marker. (Escape
+hatch: `jj git push --allow-conflicts`, for the rare case you actually
+want to.)
 
 1. Resolve without moving `@`: `jj resolve -r <rev>`. Or move onto it
    first — `jj new -r <rev>` (scratch change, `jj squash --into <rev>`
