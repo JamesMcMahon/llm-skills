@@ -32,17 +32,38 @@ source, fix it there, commit — don't disrupt the task at hand.
      name, code, business logic, and any other private or proprietary
      detail — the fix should read the same regardless of which project
      triggered it.
+   - Classify the gap: **retrieval** (the skill never got invoked for
+     this situation — fix belongs in the frontmatter `description`) or
+     **application** (the skill was read but produced the wrong
+     guidance — fix belongs in the body). Fixing the wrong half leaves
+     the real gap open.
+   - Check the target repo's working copy is clean before touching
+     anything (`git status`, or the jj equivalent — check for a `.jj`
+     directory rather than assuming git) — stash/back up or stop and
+     ask if it's dirty; it may hold the owner's in-progress work.
+   - Confirm the gap is real: run the genericized scenario against the
+     *current, unfixed* skill with a fresh subagent first. If it
+     doesn't reproduce the failure, the scenario or the genericization
+     lost the trigger — fix that before touching the skill, not after.
    - Make the fix. Ground every claim in reality — run the actual
-     command/tool, don't guess from memory.
+     command/tool, don't guess from memory. Match the fix's form to
+     the failure (prohibition for a rule skipped under pressure, recipe
+     for wrong-shaped output, structural field for an omitted element,
+     conditional for context-dependent behavior — see
+     superpowers:writing-skills' "Match the Form to the Failure"; a
+     prohibition bolted onto a shaping problem measurably backfires).
+     Reread the whole file and trim/de-dupe before calling it done — a
+     one-off fix is exactly how skills accrete duplication.
    - Verify: dispatch a second, fresh subagent with no knowledge of
-     the fix. Give it only the corrected skill plus a genericized
-     version of the scenario that exposed the gap — same constraint as
-     above. Confirm it now retrieves the skill unprompted and produces
-     the correct output — not just a confident one. If it doesn't,
+     the fix. Give it only the corrected skill plus the same
+     genericized scenario. Confirm it now retrieves the skill
+     unprompted (retrieval gaps) and produces the correct output
+     (application gaps) — not just a confident one. If it doesn't,
      revise and re-verify before moving on.
    - Commit it there (describe + finalize per that repo's own VCS
      conventions) — **never push.**
-   - Report back what changed, why, and what the verification showed.
+   - Report back what changed, why, and what the baseline and
+     verification runs showed.
 3. Keep working on the original task while it runs — don't block on it.
 4. When it reports back: tell the user the fix is committed, not live —
    it needs a Claude Code restart to take effect.
@@ -58,3 +79,10 @@ source, fix it there, commit — don't disrupt the task at hand.
 - Passing the correction to the subagent verbatim, carrying this repo's
   proprietary names, code, or business logic into a fix committed to
   someone else's skill repo.
+- Skipping the baseline run and treating "the fix passed" as proof —
+  if the unfixed skill was never shown to fail on that scenario, a
+  pass afterward proves nothing.
+- Fixing the wrong half: adding body content for a retrieval gap, or
+  rewording the description for an application gap.
+- Editing straight into a dirty target repo without checking its
+  working-copy status first — or assuming it's git when it's jj.
