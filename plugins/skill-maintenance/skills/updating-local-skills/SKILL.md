@@ -87,42 +87,33 @@ and the fix feels obviously right.
   skipped under pressure, recipe for wrong-shaped output, structural
   field for an omitted element, conditional for context-dependent
   behavior — see superpowers:writing-skills' "Match the Form to the
-  Failure"; a prohibition bolted onto a shaping problem measurably
-  backfires). Reread the whole file and trim/de-dupe before calling it
+  Failure"). Reread the whole file and trim/de-dupe before calling it
   done — a one-off fix is exactly how skills accrete duplication. Hold
   it to a token-efficiency budget too (frequently-loaded skills <200
-  words total, other skills <500 words): added guidance should tighten
-  existing wording, not just pile on top of it, and a fix that pushes
-  the file over budget isn't done until something else is cut to pay
-  for it.
+  words, others <500): tighten existing wording rather than piling on,
+  and cut something else if the fix pushes the file over.
 - **Verify: dispatch a second, fresh, context-free subagent** with no
-  knowledge of the fix. Give it only a realistic scenario that exercises
-  the change (the same one from the baseline check) — not the fact that
-  a fix was just made. Confirm it now retrieves the skill unprompted
-  (retrieval gaps) and produces the correct output (application gaps) —
-  not just a confident one. Cross-check anything the verify subagent
-  cites against a primary source yourself before trusting it; agents
-  disagree with each other and can cite the wrong thing with equal
-  confidence. If it doesn't pass, revise and re-verify before moving on.
-  **Exception — retrieval/description fixes:** a subagent can't verify
-  these. The discovery listing agents use to decide "should I use this
-  skill" is a process-wide cache, not read live from disk (confirmed by
-  directly asking a freshly dispatched subagent to quote the description
-  it currently sees — it quoted the pre-edit text after the fix had
-  already been committed). A subagent will reproduce the exact baseline
-  failure even against a correct fix — that's a false negative, not
-  evidence the fix is wrong. For a description fix: verify by inspection
-  that the new wording actually covers the scenario, tell the user a
-  restart is needed before it's behaviorally checkable, and if they
-  restart, re-run the same baseline scenario afterward as the real
-  verify pass.
+  knowledge of the fix. Give it the same realistic scenario from the
+  baseline check — not the fact that a fix was made. Confirm it now
+  retrieves the skill unprompted (retrieval gaps) or produces the
+  correct output (application gaps) — not just a confident one.
+  Cross-check anything it cites against a primary source yourself;
+  agents can cite the wrong thing with equal confidence. If it doesn't
+  pass, revise and re-verify. **Exception — retrieval/description
+  fixes:** unverifiable this way. The discovery listing is a
+  process-wide cache, not read live from disk — a subagent dispatched
+  right after the fix still sees the old description and reproduces the
+  baseline failure regardless of whether the fix is correct. Verify
+  these by inspection instead: confirm the new wording covers the
+  scenario, tell the user a restart is needed before it's behaviorally
+  checkable, and re-run the baseline scenario after they restart as the
+  real verify pass.
 
 ## Common Mistakes
 
 - Skipping the verify step because you're already in the skill's source
   repo and the fix "obviously" looks right — an in-place edit needs the
-  same fresh-subagent check as a dispatched one; being in the trusted
-  repo has no bearing on whether the *wording* actually lands.
+  same fresh-subagent check as a dispatched one.
 - Treating a self-noticed gap as out of scope because no user filed an
   explicit correction — this skill covers self-driven fixes too, not
   just reported ones.
@@ -144,8 +135,6 @@ and the fix feels obviously right.
   version-specific behavior) without checking it against the primary
   source yourself — two independent subagents can produce two different
   confident answers.
-- Treating a verify subagent's failure to retrieve the skill as proof a
-  description fix didn't work. The discovery listing is a process-wide
-  cache — a subagent dispatched right after a description edit still
-  sees the old text and will fail identically to the baseline, even
-  against a fully correct fix. Only an actual restart clears it.
+- Treating a verify subagent's failed retrieval as proof a description
+  fix didn't work — the cache means it won't clear until an actual
+  restart (see the Verify exception above).
