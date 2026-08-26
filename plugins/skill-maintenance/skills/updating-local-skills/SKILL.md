@@ -61,9 +61,10 @@ and the fix feels obviously right.
 2b. **Edit in place.** No genericization needed — this repo already
     owns the source. Follow the Fix Discipline below directly, then
     commit locally per this repo's own VCS conventions (jj here —
-    `jj describe` + `jj bookmark advance` + `jj new`, never `jj git
-    push`) and report what changed and what verification showed. Same
-    caching caveat as 2a applies here too.
+    `jj describe` + `jj new`; only `jj bookmark advance` if the repo's
+    own instructions call for it — some, like this one, move `main` by
+    hand instead; never `jj git push`) and report what changed and what
+    verification showed. Same caching caveat as 2a applies here too.
 
 ## Fix Discipline (both paths)
 
