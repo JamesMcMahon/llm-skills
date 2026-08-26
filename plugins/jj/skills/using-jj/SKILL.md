@@ -87,6 +87,23 @@ the workflow above doesn't apply until both exist:
 From here the normal `jj bookmark advance` + `jj git push` workflow
 applies.
 
+## Finishing a Branch (superpowers:finishing-a-development-branch) in jj
+
+That skill's menu assumes git branches and a real `git merge` step — jj
+has neither. There's no separate feature branch to merge back: work
+happens directly on top of wherever `@` started, and a bookmark is just
+a label on one commit in that graph.
+
+- **"Merge back to `<base-branch>` locally"** → `jj bookmark advance`
+  (or `jj bookmark set <base> -r <tip-of-work>`) — moves the base
+  bookmark to the tip of the finished work. No checkout, no merge
+  commit: you were never on a separate branch to merge.
+- **"Push and create a Pull Request"** → same as the normal workflow:
+  advance the bookmark, `jj git push`, open the PR.
+- **Cleanup step (`git branch -d <feature-branch>`)** → nothing to do.
+  Once the bookmark has advanced, the prior commits are just ancestors
+  in `jj log` — there's no branch object left to delete.
+
 ## Editing a Prior Commit
 
 No todo list, no "continue" step — descendants rebase immediately and
