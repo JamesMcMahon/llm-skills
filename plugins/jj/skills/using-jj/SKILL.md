@@ -46,6 +46,23 @@ commit`.
 | `jj next` / `jj prev` | Move `@` to the child / parent revision |
 | `jj undo` / `jj op log` | Undo the last operation / view operation history |
 | `jj abandon [--retain-bookmarks]` | Discard a change, rebasing descendants onto its parent — **deletes** any bookmark pointing at it unless `--retain-bookmarks` is given |
+| `jj new -B <rev>` | Insert a new empty change immediately *before* `<rev>`, auto-rebasing it and its descendants forward |
+| `jj resolve` | Launch a merge tool on the conflicted paths of `@` — see Resolving Conflicts below |
+| `jj bookmark set <name> -r <rev> --allow-backwards` | Move a bookmark to an earlier revision (refused without the flag) |
+| `jj new <rev1> <rev2> ...` | Create a merge commit with multiple parents (`jj merge` is deprecated) |
+
+## Revsets
+
+`-r <rev>` throughout this reference accepts more than a commit id:
+
+| Revset | Meaning |
+|---|---|
+| `@` / `@-` / `@+` | Current change / its parent / its child |
+| `x::y` | Commits between `x` and `y`, inclusive |
+| `::x` / `x::` | Ancestors of `x` / descendants of `x` |
+| `trunk()` | The main branch's tip on the remote |
+| `mine()` | Commits authored by you |
+| `heads(all())` | Every branch tip, named or not |
 
 ## Typical Solo Workflow
 
@@ -118,11 +135,30 @@ automatically whenever an ancestor changes.
   name in an earlier commit in this repo.
 - **Fixups already in `@`:** `jj absorb` auto-detects which ancestor each
   uncommitted hunk belongs to and folds it in — no fixup markers needed.
+- **Inserting before an existing commit:** `jj new -B <revision>` opens a
+  new empty change immediately before `<revision>`, auto-rebasing it (and
+  its descendants) onto the new change — use this instead of `edit`/
+  `squash` when the commit needs to land *earlier* in history.
 
 Nothing is immutable by default except the root commit, so this works on
 already-pushed commits too — but it still rewrites history for anyone
 who has them. `jj git push` never needs `--force`: it force-with-lease
 checks automatically and asks for `jj git fetch` if the remote moved.
+
+## Resolving Conflicts
+
+Rebase, squash, and `jj new -B` never stop for a conflict — they record
+it on the affected commit and keep going. `jj log`/`jj st` marks it
+`conflict`, and the conflict propagates to descendants until fixed.
+
+1. Move `@` onto the conflicted commit: `jj new <rev>` (scratch change,
+   `jj squash --into <rev>` when done) or `jj edit <rev>` (in place —
+   same tradeoff as above).
+2. Run `jj resolve` (merge tool) or edit the conflicted file directly.
+3. **jj's conflict markers are not git's:** `<<<<<<<`/`>>>>>>>` bound the
+   conflict, `+++++++` marks a side's snapshot, `%%%%%%%` marks a diff
+   against it. Expecting git's `<<<<`/`====`/`>>>>` format will misread
+   the file.
 
 ## Undo / Recovery
 
@@ -136,14 +172,15 @@ jump to any earlier state. This covers accidental `abandon`, bad
 - **Running `git add`/`git commit` directly.** Works (colocated), but
   bypasses jj's model — prefer `jj describe`/`jj commit`.
 - **Expecting a bookmark to follow new commits.** Unlike a git branch, it
-  stays put until you `jj bookmark advance` (or `set`/`move`) it — check
-  `jj bookmark list` if `jj git push` claims there's nothing to push.
+  stays put until you `jj bookmark advance` (or `set`/`move`) it. Symptom:
+  `jj git push` prints `Warning: No bookmarks found in the default push
+  revset...` then `Nothing changed.` — check `jj bookmark list`.
 - **Running `jj new` before every edit.** Unnecessary — you're already
   editing `@`; `jj new` is only for starting a fresh change deliberately.
 - **Looking for a `rebase --continue` step after `jj edit`/`jj squash`.**
   There isn't one — conflicts from auto-rebasing just land on the
-  affected commits (visible in `jj log`) to resolve whenever, not
-  blocking the command you ran.
+  affected commits (visible in `jj log`), not blocking the command you
+  ran. See Resolving Conflicts above.
 - **Running `jj undo` and then redoing similar work.** `jj undo` doesn't
   erase the undone operation, it just restores an earlier view — so a
   later rewrite of the same change can end up unrelated to the first one
