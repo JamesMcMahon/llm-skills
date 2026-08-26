@@ -1,0 +1,168 @@
+# using-jj Reference
+
+## Mental Model vs Git
+
+| Git concept | jj equivalent |
+|---|---|
+| staging area / `git add` | none — all tracked-directory changes are part of `@` automatically |
+| `git commit` | `jj describe -m "msg"` (labels `@`) or `jj commit -m "msg"` (labels `@` **and** creates a new empty child to work in) |
+| branch (auto-follows HEAD) | bookmark (does **not** auto-follow — move it explicitly) |
+| `git checkout <branch>` | `jj new <revision>` |
+| `git rebase -i` (edit an old commit) | `jj edit`/`jj new -r`+`jj squash` — see below, no todo list, no "continue" step |
+| `git reset`/`git revert` (undo a mistake) | `jj undo` (undoes the last jj operation, repeatable) |
+| `git log` | `jj log` |
+| `git push`/`git fetch` | `jj git push`/`jj git fetch` |
+
+## Quick Reference
+
+| Command | Purpose |
+|---|---|
+| `jj st` / `jj log` / `jj diff` | Status / change graph / diff of `@` |
+| `jj describe -m "msg"` | Label `@` without moving to a new change |
+| `jj commit -m "msg"` | Label `@`, then start a fresh empty change on top |
+| `jj new [-r <rev>]` | Start a new empty change (on `@`, or on `<rev>`) |
+| `jj bookmark set <name> -r @` | Point bookmark `<name>` at `@` (creates it if it doesn't exist yet) |
+| `jj bookmark advance` | Move the closest bookmark behind `@` (e.g. `main`) forward to `@` — no name needed |
+| `jj bookmark track <name>@<remote>` | Link a local bookmark to a remote one so push/fetch will manage it |
+| `jj git remote add <name> <url>` | Register a remote (`jj git remote list` / `set-url` to inspect / fix it) |
+| `jj git push` / `jj git fetch` | Push tracked bookmarks / fetch from remote |
+| `jj edit <rev>` | Move `@` onto an existing commit to edit it in place |
+| `jj squash --into <rev>` | Fold the current change's contents into `<rev>` |
+| `jj absorb` | Auto-distribute uncommitted `@` changes into ancestors |
+| `jj next` / `jj prev` | Move `@` to the child / parent revision |
+| `jj undo` / `jj op log` | Undo the last operation / view operation history |
+| `jj abandon [--retain-bookmarks]` | Discard a change, rebasing descendants onto its parent — **deletes** any bookmark pointing at it unless `--retain-bookmarks` is given |
+| `jj new -B <rev>` | Insert a new empty change immediately *before* `<rev>`, auto-rebasing it and its descendants forward |
+| `jj resolve [-r <rev>]` | Launch a merge tool on conflicted paths (defaults to `@`) — see Resolving Conflicts below |
+| `jj bookmark set <name> -r <rev> --allow-backwards` | Move a bookmark to an earlier revision (refused without the flag) |
+| `jj new <rev1> <rev2> ...` | Create a merge commit with multiple parents (`jj merge` is deprecated) |
+
+## Revsets
+
+`-r <rev>` throughout this reference accepts more than a commit id:
+
+| Revset | Meaning |
+|---|---|
+| `@` / `@-` / `@+` | Current change / its parent / its child |
+| `x::y` | Commits between `x` and `y`, inclusive |
+| `::x` / `x::` | Ancestors of `x` / descendants of `x` |
+| `trunk()` | The main branch's tip on the remote |
+| `mine()` | Commits authored by you |
+| `heads(all())` | Every branch tip, named or not |
+
+## Connecting a Fresh Repo to a Remote
+
+`jj git init` (with no clone) creates neither a remote nor a bookmark, so
+the workflow above doesn't apply until both exist:
+
+1. `jj git remote add origin <url>` — register the remote.
+2. `jj bookmark set main -r @` — no bookmark exists yet, so `jj bookmark
+   advance` has nothing to move.
+3. `jj git push` will refuse: *"Refusing to create new remote bookmark
+   main@origin"*. Not an error — run `jj bookmark track main@origin`,
+   then push again. Same fix as the "non-tracking remote bookmark"
+   warning above, just hit on the first push instead of after a fetch.
+
+From here the normal `jj bookmark advance` + `jj git push` workflow
+applies.
+
+## Finishing a Branch (superpowers:finishing-a-development-branch) in jj
+
+That skill's menu assumes git branches and a real `git merge` step — jj
+has neither. There's no feature branch to merge back: work happens
+directly on top of wherever `@` started, and a bookmark is just a label
+on one commit in that graph.
+
+- **"Merge back to `<base-branch>` locally"** → `jj bookmark advance`
+  (or `jj bookmark set <base> -r <tip-of-work>`) — moves the base
+  bookmark to the tip of the finished work. No checkout, no merge
+  commit: you were never on a separate branch to merge.
+- **"Push and create a Pull Request"** → same as the normal workflow:
+  advance the bookmark, `jj git push`, open the PR.
+- **Cleanup step (`git branch -d <feature-branch>`)** → nothing to do.
+  Once the bookmark has advanced, the prior commits are just ancestors
+  in `jj log` — there's no branch object left to delete.
+
+## Editing a Prior Commit
+
+No todo list, no "continue" step — descendants rebase immediately and
+automatically whenever an ancestor changes.
+
+- **In place:** `jj edit <revision>`, edit files, then `jj edit
+  <original-revision>` (or `jj next`) to return. Simple, but moves `@`
+  out from under whatever you were doing.
+- **Recommended:** `jj new -r <revision>` (scratch change off it, `@`
+  stays put) → edit → `jj squash --into <revision>` (folds back in,
+  scratch commit auto-abandons once empty).
+- **Fixups already in `@`:** `jj absorb` auto-detects which ancestor each
+  uncommitted hunk belongs to and folds it in — no fixup markers needed.
+- **Inserting before an existing commit:** `jj new -B <revision>` opens a
+  new empty change immediately before `<revision>`, auto-rebasing it (and
+  its descendants) onto the new change — use this instead of `edit`/
+  `squash` when the commit needs to land *earlier* in history.
+
+Nothing is immutable by default except the root commit, so this works on
+already-pushed commits too — but it still rewrites history for anyone
+who has them. `jj git push` never needs `--force`: it force-with-lease
+checks automatically and asks for `jj git fetch` if the remote moved.
+
+## Resolving Conflicts
+
+Rebase, squash, and `jj new -B` never stop for a conflict — they record
+it on the affected commit and keep going. `jj log`/`jj st` marks it
+`conflict` and it propagates to descendants until fixed. **`jj git
+push` refuses to push any bookmark whose history includes a conflicted
+commit** — a hard stop, not just the log marker. (Escape hatch: `jj git
+push --allow-conflicts`.)
+
+1. Resolve without moving `@`: `jj resolve -r <rev>`. Or move onto it
+   first — `jj new -r <rev>` (scratch change, `jj squash --into <rev>`
+   when done) or `jj edit <rev>` (in place) — same tradeoff as above.
+2. `jj resolve [-r <rev>]` launches your configured merge tool
+   (`ui.merge-tool`) per conflicted file. No tool configured? Edit the
+   file by hand — no `git add`-equivalent step, jj reparses the file
+   and clears the conflict once no markers remain.
+3. **jj's default conflict markers aren't git's `<<<<`/`====`/`>>>>`.**
+   Each hunk is bounded by `<<<<<<< conflict N of M` / `>>>>>>> conflict
+   N of M ends`; inside, `%%%%%%% diff from: <base> to: <side>` is a
+   unified diff against one side, `+++++++ <rev> "desc"` is a full
+   verbatim snapshot of the *other* side — there is no bare `=======`
+   divider. (Marker style is configurable via `ui.conflict-marker-style`;
+   `diff`, described here, is the default.)
+
+## Undo / Recovery
+
+Almost anything can be undone: `jj undo` steps back one operation, and
+`jj op log` shows the full history with ids for `jj op restore <id>` to
+jump to any earlier state. This covers accidental `abandon`, bad
+`rebase`/`squash`, etc.
+
+## Common Mistakes
+
+- **Running `git add`/`git commit` directly.** Works (colocated), but
+  bypasses jj's model — prefer `jj describe`/`jj commit`.
+- **Expecting a bookmark to follow new commits.** Unlike a git branch, it
+  stays put until you `jj bookmark advance` (or `set`/`move`) it. Symptom:
+  `jj git push` prints `Warning: No bookmarks found in the default push
+  revset...` then `Nothing changed.` — check `jj bookmark list`.
+- **Running `jj new` before every edit.** Unnecessary — you're already
+  editing `@`; `jj new` is only for starting a fresh change deliberately.
+- **Looking for a `rebase --continue` step after `jj edit`/`jj squash`.**
+  There isn't one — conflicts from auto-rebasing just land on the
+  affected commits (visible in `jj log`), not blocking the command you
+  ran. See Resolving Conflicts above.
+- **Running `jj undo` and then redoing similar work.** `jj undo` doesn't
+  erase the undone operation, just restores an earlier view — a later
+  rewrite of the same change can end up unrelated to the first in jj's
+  eyes, showing as **divergent** (`jj log` marks it, bookmark ends up
+  conflicted, e.g. `main??`, blocking push). Fix: `jj bookmark set
+  <name> -r <revision-you-want>` to resolve the bookmark, then `jj
+  abandon` the stale duplicate.
+- **Assuming `jj abandon` moves a bookmark to the parent.** It doesn't —
+  by default it *deletes* any bookmark pointing at the abandoned commit
+  entirely. If you want it preserved (moved to the parent instead), pass
+  `--retain-bookmarks`.
+- **Trusting `git status`/`git log` for truth here.** Git's HEAD stays
+  detached and its index goes stale — it can show "changes not staged"
+  right after a clean `jj describe`. Refs like `refs/heads/main` are
+  correct; verify with `jj log`/`jj status`, not `git status`.
