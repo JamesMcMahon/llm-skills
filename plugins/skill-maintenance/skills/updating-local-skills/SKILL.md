@@ -89,7 +89,12 @@ and the fix feels obviously right.
   behavior — see superpowers:writing-skills' "Match the Form to the
   Failure"; a prohibition bolted onto a shaping problem measurably
   backfires). Reread the whole file and trim/de-dupe before calling it
-  done — a one-off fix is exactly how skills accrete duplication.
+  done — a one-off fix is exactly how skills accrete duplication. Hold
+  it to a token-efficiency budget too (frequently-loaded skills <200
+  words total, other skills <500 words): added guidance should tighten
+  existing wording, not just pile on top of it, and a fix that pushes
+  the file over budget isn't done until something else is cut to pay
+  for it.
 - **Verify: dispatch a second, fresh, context-free subagent** with no
   knowledge of the fix. Give it only a realistic scenario that exercises
   the change (the same one from the baseline check) — not the fact that
@@ -131,6 +136,8 @@ and the fix feels obviously right.
   afterward proves nothing.
 - Fixing the wrong half: adding body content for a retrieval gap, or
   rewording the description for an application gap.
+- Landing a fix by addition alone — growing the file past its
+  word-count budget instead of trimming elsewhere to offset it.
 - Editing straight into a dirty target repo without checking its
   working-copy status first — or assuming it's git when it's jj.
 - Accepting a verify subagent's cited fact (a config key, a flag name, a
