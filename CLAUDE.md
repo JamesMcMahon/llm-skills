@@ -8,7 +8,11 @@ Personal Claude Code plugin marketplace — one plugin per skill under
 This repo uses jj (colocated with git) — see
 `plugins/jj/skills/using-jj/SKILL.md` for the workflow. Commit and
 describe changes locally as normal; **never run the push step** (`jj git
-push`) — the user pushes, always, in any repo.
+push`) — the user pushes, always, in any repo. **Never advance the
+`main` bookmark** (`jj bookmark advance`/`set`/`move`) — the user moves
+it by hand; it's their equivalent of deciding when to merge to main.
+Leave finished work described and checkpointed with `jj new`; don't
+move `main` onto it.
 
 **Commit messages: Conventional Commits**
 

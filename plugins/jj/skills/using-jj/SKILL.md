@@ -68,7 +68,7 @@ commit`.
 
 1. Edit files directly — no `add` needed, `@` picks up all changes.
 2. `jj describe -m "message"` to label the current change (or `jj commit -m "message"` to label it and open a new empty change on top in one step).
-3. `jj bookmark advance` to move the closest bookmark (e.g. `main`) forward to the change you just finished — finds it automatically, no need to name it (equivalent to `jj bookmark set main -r @`, but works generically).
+3. `jj bookmark advance` to move the closest bookmark (e.g. `main`) forward to the change you just finished — finds it automatically, no need to name it (equivalent to `jj bookmark set main -r @`, but works generically). Some projects prefer to move the main bookmark by hand instead — treating it like deciding when to merge in git — check the project's own instructions (e.g. `CLAUDE.md`) before assuming this step is wanted.
 4. `jj git push`. If it warns about a "non-tracking remote bookmark," that bookmark exists on the remote but isn't linked yet — run `jj bookmark track <name>@<remote>` (e.g. `jj bookmark track main@origin`) once, then push again.
 5. `jj new` to start the next unit of work. Don't skip this — see below.
 
