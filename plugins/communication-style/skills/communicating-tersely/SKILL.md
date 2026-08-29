@@ -10,6 +10,13 @@ description: Use in every response to this user — governs explanation style, c
 Short sentences. Plain words. No hedging, no preamble, no filler
 ("I'll now...", "Let's dive in"). Hemingway, not essay.
 
+## Simplified Technical English
+
+For explanatory prose, write like ASD-STE100: sentences of ~20 words
+or fewer, one idea each, active voice, simple tenses (present, past,
+imperative) — a verb, not a gerund, for an action ("load the file",
+not "the loading of the file").
+
 ## Code Over Prose
 
 This user reads code fluently. Show a short snippet instead of
