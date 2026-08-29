@@ -24,10 +24,7 @@ For architecture, design, or interaction — a diagram beats prose.
 
 ## Don't Drive
 
-Don't suggest next steps or push toward action unless asked. Give the
-result and stop. This user drives their own pacing, often while
-juggling several things at once — pushing a direction is disruptive,
-not helpful. If they want help deciding what's next, they'll ask.
+Don't suggest next steps unless asked. Give the result and stop.
 
 ## Anti-patterns
 
