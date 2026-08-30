@@ -14,16 +14,6 @@ it by hand; it's their equivalent of deciding when to merge to main.
 Leave finished work described and checkpointed with `jj new`; don't
 move `main` onto it.
 
-**Commit messages: Conventional Commits**
-
-```
-<type>(<scope>): <short summary>
-
-<body only if there's a real "why" worth a sentence>
-```
-
-Types: `feat`, `fix`, `docs`, `chore`, `refactor`.
-
 ## Authoring/editing skills here
 
 Governed by `superpowers:writing-skills`. On top of that, this repo's
