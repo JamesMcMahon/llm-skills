@@ -50,6 +50,9 @@ tools and future readers scan for these at the end.
 ## Leave out
 
 - Anything already obvious from reading the diff.
+- Future work and deferred decisions — "left as a follow-up", "handled in
+  a separate change". It belongs in an issue tracker or TODO file, not
+  permanent history; this message says only what this change did.
 - Ephemeral review discussion — that belongs in the PR/MR thread, not
   permanent history.
 - Links with a short shelf life (preview URLs, build artifacts).
