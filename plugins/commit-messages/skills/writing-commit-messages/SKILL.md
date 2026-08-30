@@ -1,6 +1,6 @@
 ---
 name: writing-commit-messages
-description: Use when writing or reviewing a commit or change description in any VCS — covers subject line phrasing, when a body is warranted, and what belongs in it versus the diff or review thread.
+description: Use when writing or reviewing a commit or change description, or about to run `git commit` / `jj describe` — including when asked to "commit", "make a commit", or "save changes". Covers subject-line phrasing, when a body is warranted, and what belongs in the message versus the diff or review thread.
 ---
 
 # Writing Commit Messages
