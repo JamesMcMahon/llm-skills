@@ -1,0 +1,8 @@
+{
+  "name": "pairing-modes",
+  "description": "Assign and switch pair-programming roles (driver/navigator) between you and Claude: solo, you drive, you navigate, rubber duck, plus a ping-pong cadence.",
+  "version": "0.1.0",
+  "author": {
+    "name": "James McMahon"
+  }
+}
