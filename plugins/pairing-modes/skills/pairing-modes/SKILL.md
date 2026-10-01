@@ -158,31 +158,18 @@ cadence` (or by naming a static assignment). Announce every swap.
 
 ### Ping-pong (TDD)
 
-Swap only on a **verified green**: the test exercises the real behavior
-and asserts the requirement, and the implementation passes for that
-behavior. Whoever makes a verified green writes the next failing test,
-then hands the keyboard over. "You write the first test, I implement,
-ping-pong from there" → user writes test 1; Claude verifies it is a
-meaningful test, implements until it passes for the right reason, then
-writes test 2; user greens test 2 and writes test 3; and so on.
+Swap only on **verified green**: the test asserts the required behavior,
+fails for the expected reason, and passes with an implementation that
+handles that behavior.
 
-The handoff is provisional until that verification is complete. If the
-test is incomplete or does not fail for the expected reason, the test
-phase is still open: return the keyboard to the test author to repair
-the test and verify its red before implementation resumes. If a valid
-test passes for the wrong reason, or the implementation cannot satisfy
-it, keep or return the keyboard to the implementation driver to fix the
-implementation. In either case, do not swap or start the next test.
-Keep existing work for diagnosis; rollback the handoff, not the user's
-or driver's changes. Rerun the relevant test and verify the behavior
-before swapping.
+If the test is invalid, return the keyboard to its author to repair it
+and verify red. If the test is valid but the implementation fails or
+passes for the wrong reason, keep the keyboard with the implementation
+driver. Don’t start the next test. Keep changes for diagnosis; fix and
+rerun before swapping.
 
-After a verified green, the implementation driver writes the next
-failing test, then hands the keyboard to the other person. For example,
-if Claude makes the user's test pass, Claude writes the next test and
-hands the keyboard to the user. If the user's test needs repair first,
-the user repairs it and reruns it red; only then does Claude resume
-implementation.
+After verified green, the implementation driver writes the next failing
+test, then hands off.
 
 Mode line while a cadence runs — the driver slot names this turn's
 keyboard holder, `Claude` or `you`, never "me" / "I":
@@ -193,11 +180,9 @@ keyboard holder, `Claude` or `you`, never "me" / "I":
 ```
 
 At each verified green: one-line test status, swap, continue — no
-handoff-point stop for the green itself. A green command with an invalid
-test or a wrong-reason implementation is not a verified green; keep the
-current phase open and return the keyboard as described above. The
-other handoff points still halt the loop: a design or architecture
-decision, a new or reworked file, stuck 3 turns.
+handoff-point stop for the green itself. The other handoff points still
+halt the loop: a design or architecture decision, a new or reworked
+file, stuck 3 turns.
 
 Ping-pong is inherently TDD — it *is* the red/green boundary. The static
 assignments assume nothing about TDD.
