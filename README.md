@@ -53,6 +53,30 @@ Re-run it after adding a new plugin. Restart Claude Code (or start a new
 session) for anything new/changed to take effect either way — plugin
 state is a session-start snapshot, not live-reloaded.
 
+## Using skills with Pi
+
+Pi can load the `SKILL.md` files directly; it does not load the Claude
+Code plugin manifests. To make these skills available across Pi projects,
+link each skill directory into Pi's shared Agent Skills directory
+(`~/.agents/skills/`):
+
+```bash
+mkdir -p ~/.agents/skills
+for skill in "$PWD"/plugins/*/skills/*; do
+  ln -sfn "$skill" ~/.agents/skills/"$(basename "$skill")"
+done
+```
+
+Run this from the repository root. Re-run it when adding a skill. Start a
+new Pi session to discover newly linked skills; after editing a skill in
+an existing session, use `/reload`. Pi loads each skill's instructions
+when relevant, or you can request one explicitly with `/skill:<name>`
+(for example, `/skill:using-jj`).
+
+For project-only availability instead, put links under
+`.agents/skills/` in the project where you want to use them. Pi discovers
+that directory from the working directory up to the repository root.
+
 To test a plugin without linking it permanently:
 
 ```bash
