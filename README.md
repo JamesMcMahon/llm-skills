@@ -46,36 +46,31 @@ live source, no resync step, ever:
 ```bash
 git clone git@github.com:JamesMcMahon/llm-skills.git
 cd llm-skills
-./scripts/link-skills.sh
+./scripts/link-claude-skills.sh
 ```
 
 Re-run it after adding a new plugin. Restart Claude Code (or start a new
 session) for anything new/changed to take effect either way — plugin
 state is a session-start snapshot, not live-reloaded.
 
-## Using skills with Pi
+## Using skills with other harnesses
 
-Pi can load the `SKILL.md` files directly; it does not load the Claude
-Code plugin manifests. To make these skills available across Pi projects,
-link each skill directory into Pi's shared Agent Skills directory
-(`~/.agents/skills/`):
+These plugin folders also contain standard `SKILL.md` files. Harnesses
+that support the shared Agent Skills directory can load them without the
+Claude Code plugin manifests. For example, Pi and OpenCode can discover
+skills linked under `~/.agents/skills/`:
 
 ```bash
-mkdir -p ~/.agents/skills
-for skill in "$PWD"/plugins/*/skills/*; do
-  ln -sfn "$skill" ~/.agents/skills/"$(basename "$skill")"
-done
+./scripts/link-agent-skills.sh
 ```
 
-Run this from the repository root. Re-run it when adding a skill. Start a
-new Pi session to discover newly linked skills; after editing a skill in
-an existing session, use `/reload`. Pi loads each skill's instructions
-when relevant, or you can request one explicitly with `/skill:<name>`
-(for example, `/skill:using-jj`).
+Run it from any directory; it finds the repository from the script path.
+Re-run it when adding a skill. For project-only availability, put links
+under `.agents/skills/` in that project instead.
 
-For project-only availability instead, put links under
-`.agents/skills/` in the project where you want to use them. Pi discovers
-that directory from the working directory up to the repository root.
+Pi discovers new links in a new session; use `/reload` after editing in
+an existing session. Pi loads instructions when relevant, or you can ask
+for one with `/skill:<name>` (for example, `/skill:using-jj`).
 
 To test a plugin without linking it permanently:
 
