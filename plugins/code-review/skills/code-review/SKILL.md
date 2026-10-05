@@ -22,7 +22,7 @@ For the first response, use this order:
 
 1. `## Why` — state why the change exists and the architectural or behavioral shift.
 2. `## Route` — preview the logical stops and key changed files. Keep this brief.
-3. `## Room 1 — <unit>` — list the room's highlighted files as bullets with exact line ranges, then explain why this unit changed, what it does, and how it fits.
+3. `## Room 1 — <unit> (<filename(s)>)` — include the actual filename(s) in the heading, then list the room's highlighted files as bullets with exact paths and line ranges. Explain why this unit changed, what it does, and how it fits.
 4. End with one brief question or pause that lets the reviewer steer.
 
 This is a response shape, not a full-tour report. Explain only the first room; continue one room at a time in later turns.
@@ -31,7 +31,7 @@ This is a response shape, not a full-tour report. Explain only the first room; c
 
 For each logical unit:
 
-- Name the room and begin with a short bullet list of its highlighted files, each with a path and exact line range. Include only the files needed to follow this room.
+- Name the room with its concept and actual filename(s), then begin with a short bullet list of its highlighted files, each with an exact path and line range. Include only the files needed to follow this room.
 - Explain why this room changed, what the code does, how it works, and how it connects to the overall change.
 - Include a relevant concern as a short aside where it belongs; distinguish an established behavior from a question or risk.
 - Pause at a meaningful boundary for the reviewer's questions or direction. Answer in context, then continue when they are ready.
