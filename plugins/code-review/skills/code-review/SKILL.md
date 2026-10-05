@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use when reviewing a code change, commit, pull request, or diff, especially when the reviewer asks for a guided walkthrough or wants to understand how the parts fit together.
+description: Use when a reviewer explicitly asks for a guided walkthrough of a code change or wants to understand how its parts fit together; not for general requests to review a change or find issues.
 ---
 
 # Code Review Walkthrough
