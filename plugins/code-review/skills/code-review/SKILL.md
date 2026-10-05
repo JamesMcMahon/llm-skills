@@ -13,7 +13,7 @@ Help the reviewer understand how a change works, why its parts fit together, and
 
 1. Inspect the complete diff and relevant surrounding code. Establish the change's purpose from its context, not only its commit message.
 2. Group changed code into logical units of behavior or responsibility. A unit may span files; do not default to one room per file.
-3. Build the route from logical units changed by the diff. Use unchanged code only as labeled context; do not imply it changed. Order the tour by the change's flow or concepts.
+3. Build the route from logical units changed by the diff. Default to outside-in: start at the outermost relevant boundary (such as a user-facing entry point, API, CLI, or event handler) and follow the flow inward toward core behavior. Use unchanged code at the boundary as labeled context; do not imply it changed. If another order explains the change better, use it and briefly say why in the Route.
 4. Get accurate file and line references from the reviewed revision. Use paths and line ranges the reviewer can open. If line numbers are unavailable, say so rather than guessing.
 
 ## Open the tour
