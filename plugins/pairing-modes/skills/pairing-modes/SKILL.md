@@ -10,9 +10,11 @@ description: Use when the user says "let's pair" / "pair up", assigns or swaps p
 Pair programming has two roles: the **driver** — hands on the keyboard,
 writing the code in front of them — and the **navigator** — reviewing as
 it lands, thinking ahead, holding the list of what is next. This skill
-assigns those roles between the user and Claude on request, and lets the
-user reassign them in one phrase. The assignment is sticky: it holds
-until the user changes it with a trigger token. Absent a request, this
+assigns those roles between the user and the agent on request, and lets
+the user reassign them in one phrase. The harness is the agent's runtime
+environment, not a pairing role. In this skill, **you** means the user
+and **agent** means the AI agent, regardless of harness. The assignment is
+sticky: it holds until the user changes it with a trigger token. Absent a request, this
 skill does nothing — no mode line, business as usual.
 
 ## The roles
@@ -27,31 +29,20 @@ navigator  reviews each change as it lands. Strategic — where this is
 
 ## The four assignments
 
-```
-                   Claude navigates          User navigates
-Claude drives   │  solo                    │  you drive
-(keyboard)      │  Claude plans, writes,   │  Claude = driver, you
-                │  tests; reports at       │  set direction and next
-                │  handoff points          │  steps; Claude writes what
-                │                          │  you call for, nothing
-                │                          │  wider without asking
-────────────────┼──────────────────────────┼──────────────────────────
-User drives     │  you navigate            │  rubber duck
-(keyboard)      │  you = driver; Claude    │  Claude reflects and
-                │  describes the next step  │  questions only. No edits,
-                │  in words, writes no     │  no direction. You drive
-                │  code, reviews what you   │  and navigate.
-                │  typed, holds the list.  │
-                │  The idea reaches the    │
-                │  code through your hands. │
-```
+| Driver | Navigator | Mode | Behavior |
+|---|---|---|---|
+| Agent | Agent | `solo` | Agent plans, writes, and tests. |
+| Agent | You | `you drive` | You set direction; agent writes what you ask for. |
+| You | Agent | `you navigate` | Agent describes the next step and reviews; you write. |
+| You | You | `rubber duck` | Agent reflects and asks questions; you drive and navigate. |
 
 `you navigate` is strong-style pairing (Llewellyn Falco): for an idea to
 get from the navigator's head into the code, it goes through the
 driver's hands. It is the mode for learning a codebase.
 
-Claude edits files in `solo` and `you drive`. Claude does **not** edit
-files in `you navigate` or `rubber duck` — the keyboard is the user's.
+The agent edits files in `solo` and `you drive`. The agent does **not**
+edit files in `you navigate` or `rubber duck` — the keyboard is the
+user's.
 
 ## Picking the assignment
 
@@ -72,10 +63,10 @@ token                effect
 -----------------    --------------------------------------------
 let's pair / pair up print the four assignments and ask which; adopt the
                      answer. No answer, work starts anyway → solo
-solo / autopilot     Claude drives + navigates
-you drive            Claude = driver, you = navigator
-you navigate         you = driver, Claude = navigator
-rubber duck          Claude reflects only, no keyboard
+solo / autopilot     agent drives + navigates
+you drive            agent = driver, you = navigator
+you navigate         you = driver, agent = navigator
+rubber duck          agent reflects only, no keyboard
 swap                 exchange the two roles, once
 ping-pong            start the ping-pong cadence (see Cadences)
 drop the cadence     stop the cadence; keep the current roles as a
@@ -98,16 +89,16 @@ On a trigger token:
 4. Do not ask why. Do not ask for confirmation. Do not recap what the
    old assignment was doing unless the new one needs that context.
 
-One carve-out: a file write already in progress while Claude is driving
-(`solo` or `you drive`) when the user sends a switch — finish that
-write, do not start the next, then switch.
+One carve-out: if a file write is in progress while the agent drives
+(`solo` or `you drive`), finish that write when the user sends a switch.
+Do not start the next write; then switch.
 
 ## Declining a non-token request
 
 When the user asks for behavior the current role withholds — an edit
-while Claude is navigator, wider scope while Claude is driver — and
-sends no trigger token: do the role-appropriate thing, then name the
-token that would grant the ask.
+while the agent navigates, or wider scope while it drives — without a
+trigger token, do the role-appropriate thing and name the token that
+would grant the ask.
 
 > "I can take this one — say `you drive` and it's yours."
 
@@ -119,19 +110,20 @@ First line of every response while roles are assigned. It states the
 assignment literally:
 
 ```
-— driver: Claude · navigator: you —
-— driver: you · navigator: Claude —      (you navigate)
-— driver + navigator: Claude —            (solo)
-— driver + navigator: you —               (rubber duck)
+— driver: agent · navigator: you —
+— driver: you · navigator: agent —      (you navigate)
+— driver + navigator: agent —            (solo)
+— driver + navigator: you —                  (rubber duck)
 ```
 
 This keeps the assignment alive across context compaction and makes
 drift visible.
 
 When the user says `let's pair` without naming an assignment, show the
-four and ask which one. Adopt their answer. This one ask is fine — they
-opened the door; a trigger token elsewhere never earns a follow-up
-question. If they skip the answer and just start working, take `solo`.
+four and ask which one. Call the non-user participant the agent; do not
+assume a particular model or harness. Adopt their answer. This one ask
+is fine — they opened the door; a trigger token elsewhere never earns a
+follow-up question. If they skip the answer and just start working, take `solo`.
 
 ## Handoff points
 
@@ -172,10 +164,10 @@ After verified green, the implementation driver writes the next failing
 test, then hands off.
 
 Mode line while a cadence runs — the driver slot names this turn's
-keyboard holder, `Claude` or `you`, never "me" / "I":
+keyboard holder, `agent` or `you`, never "me" / "I":
 
 ```
-— ping-pong · driver: Claude · swap on green —
+— ping-pong · driver: agent · swap on green —
 — ping-pong · driver: you · swap on green —
 ```
 
@@ -193,13 +185,13 @@ assignments assume nothing about TDD.
 | --- | --- |
 | "This edit is trivial — faster if I do it" | In `you navigate` / `rubber duck` the keyboard is the user's. Trivial does not transfer it. State the edit; let them type it. |
 | "The user is stuck — I should take the keyboard" | Stuck is a handoff point, not a role change. Name the next action, say who takes it, wait. |
-| "They said just do it" | "Just do it" is not a trigger token. Do the role-appropriate thing and name the token that would hand Claude the keyboard. |
+| "They said just do it" | "Just do it" is not a trigger token. Do the role-appropriate thing and name the token that would hand the agent the keyboard. |
 | "The roles were set a while back — probably stale" | Sticky until a trigger token changes them. The mode line is restated every reply so they are never stale. |
 | "The request is complex, so they must want solo" | Complexity is not a trigger token. Roles change only on a token. |
 
 ## Red flags
 
-- Editing a file while Claude is navigator (`you navigate` / `rubber duck`).
+- Editing a file while the agent is navigator (`you navigate` / `rubber duck`).
 - A reply with no mode line.
 - Asking "are you sure?" after a trigger token.
 - Finishing the previous plan before switching roles.
