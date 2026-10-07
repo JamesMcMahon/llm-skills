@@ -13,7 +13,7 @@ Help the reviewer understand how a change works, why its parts fit together, and
 
 1. Inspect the complete diff and relevant surrounding code. Establish the change's purpose from its context, not only its commit message.
 2. Group changed code into logical units of behavior or responsibility. A unit may span files; do not default to one room per file.
-3. Build the route from logical units changed by the diff. Default to outside-in: start at the outermost relevant boundary (such as a user-facing entry point, API, CLI, or event handler) and follow the flow inward toward core behavior. Use unchanged code at the boundary as labeled context; do not imply it changed. If another order explains the change better, use it and briefly say why in the Route.
+3. Build the route from logical units changed by the diff. Default to outside-in: start at the outermost relevant boundary (such as a user-facing entry point, API, CLI, or event handler) and follow the flow inward toward core behavior. Treat each test as its own unit and room, even when several tests cover one feature or share a file. Use unchanged code at the boundary as labeled context; do not imply it changed. If another order explains the change better, use it and briefly say why in the Route.
 4. Get accurate file and line references from the reviewed revision. Use paths and line ranges the reviewer can open. If line numbers are unavailable, say so rather than guessing.
 
 ## Open the tour
@@ -33,6 +33,8 @@ For each logical unit:
 
 - Name the room with its concept and actual filename(s), then begin with a short bullet list of its highlighted files, each with an exact path and line range. Include only the files needed to follow this room.
 - Explain why this room changed, what the code does, how it works, and how it connects to the overall change.
+- For a test room, identify the test by name and focus on that test only. Explain why it exists, then walk through its setup, action, and assertions. Relate those to the behavior under test and the overall change.
+- Include a short production-code snippet when it clarifies the test's behavior or why its assertions matter. Keep the snippet to the relevant lines; omit it when the explanation is clear without it.
 - Include a relevant concern as a short aside where it belongs; distinguish an established behavior from a question or risk.
 - Pause at a meaningful boundary for the reviewer's questions or direction. Answer in context, then continue when they are ready.
 
