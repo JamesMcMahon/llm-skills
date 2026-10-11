@@ -21,10 +21,9 @@ the diff), and why.
 
 - Imperative mood: "Fix crash on empty input", not "Fixed" or "Fixes". Test:
   it should complete *"If applied, this commit will \_\_\_."*
-- Describes the effect, not the mechanism. "Prevent database corruption
-  during simultaneous sign-ups" beats "Add a mutex to guard the database
-  handle" — the diff already shows the mutex. "Fixed bug" and "Updated
-  tests" describe neither and say nothing at all.
+- Describes the effect, not the mechanism. For bug fixes, state the action
+  and broken user-visible behavior. For other changes, name the resulting
+  effect, not the implementation.
 - ~50 characters. Not a hard limit, but it forces you to find the concise
   version. Capitalize; no trailing period.
 - Blank line after it, always — even with no body, tools that split subject
