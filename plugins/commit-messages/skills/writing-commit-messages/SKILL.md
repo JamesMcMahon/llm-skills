@@ -14,8 +14,11 @@ change; that's what lets the subject line stay short and the body skip
 narration. If a diff bundles unrelated changes, split it before writing
 the message, not after.
 
-Two questions decide everything else: what changed (if not obvious from
-the diff), and why.
+Focus on what changed and why. Give a future reader the motivation when
+it adds useful context; a self-explanatory change may need no further why.
+Write for someone who has the commit and repository, but not the feature
+team's conversations. Give them the context needed to understand the
+change, not a record of how the discussion unfolded.
 
 ## Subject line
 
@@ -24,21 +27,23 @@ the diff), and why.
 - Describes the effect, not the mechanism. For bug fixes, state the action
   and broken user-visible behavior. For other changes, name the resulting
   effect, not the implementation.
+- Use words a reader outside the feature team can understand. Name the
+  affected behavior rather than relying on internal shorthand.
 - ~50 characters. Not a hard limit, but it forces you to find the concise
   version. Capitalize; no trailing period.
-- Blank line after it, always — even with no body, tools that split subject
-  from body rely on that blank line.
+- Separate the subject and body with a blank line when there is a body.
 
-## Body — only when there's a real why
+## Body — only when it adds useful context
 
-Skip it for self-explanatory changes; a good subject line is a complete
-commit message. Write a body when the diff can't say:
+A good subject can be the whole message. Add a body when a future reader
+needs more to understand a non-trivial change, technical detail, or why
+it was necessary. Explain only the useful context, not every changed
+file or step. A complex behavior can merit a short explanation even when
+the details are visible in the diff.
 
-- **Why**: the motivation, constraint, or bug that made this change
-  necessary.
-- **Rejected alternatives**: what you tried first and why it didn't work,
-  if relevant.
-- **Impact**: what this means for callers/users, if not obvious.
+Explain a rejected alternative when its tradeoff or failure gives future
+readers a meaningful reason to understand the choice. State that reason
+in the message; don't assume knowledge of an LLM or review discussion.
 
 Wrap body text at ~72 columns — history viewers don't rewrap it for you.
 
@@ -48,11 +53,11 @@ tools and future readers scan for these at the end.
 
 ## Leave out
 
-- Anything already obvious from reading the diff.
+- Trivial details already clear from the subject or diff.
 - Future work and deferred decisions — "left as a follow-up", "handled in
   a separate change". It belongs in an issue tracker or TODO file, not
   permanent history; this message says only what this change did.
-- Ephemeral review discussion — that belongs in the PR/MR thread, not
+- Ephemeral LLM or review discussion — that belongs in the thread, not
   permanent history.
 - Links with a short shelf life (preview URLs, build artifacts).
 
